@@ -40,7 +40,7 @@ const struct cartridge_t game_header __attribute__((section(".cartridge"), used)
 	.title_width 	= 120,
 	.title_y 		= 32,
 	.title_x 		= -106,
-	.title 			= "Geometry\x80\xF8\x40\xF0\xA5 FOR PHIL\x80"	// note that \x00 is automatically appended!
+	.title 			= "GEOMETRY\x80\xF8\x40\xF0\xA5 FOR PHIL\x80"	// note that \x00 is automatically appended!
 };
 
 // ***************************************************************************

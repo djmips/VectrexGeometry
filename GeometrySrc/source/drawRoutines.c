@@ -240,6 +240,7 @@ void cDraw_VLcZ(const signed char *vList, signed int y, signed int x, unsigned i
 	} while (count >=0);			// loop thru all vectors
 }
 
+/*
 void cDraw_VLTri(const signed char *vList, unsigned int scaleMove, unsigned int scaleDraw )
 {
 
@@ -294,6 +295,7 @@ void cDraw_VLTri(const signed char *vList, unsigned int scaleMove, unsigned int 
 	} while (--count >=0);	
 
 }
+*/
 
 // 0 = move
 // >1 = draw

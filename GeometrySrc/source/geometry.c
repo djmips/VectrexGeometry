@@ -5,8 +5,6 @@
 #include "controller.h"
 #include "drawRoutines.h"
 
-#include "ball.h"
-
 const signed char triangles[] = {
   19,
   3,0,
@@ -178,23 +176,8 @@ void setup(void)
  */
 int main(void)
 {
-  signed char anim_state;           /* our animation state counter */
-  signed char whole;
-  const signed char frac = 10;
-  signed char ball_x;               /* where is the ball? */
-  signed char ball_y;
-  signed char ball_y_move;
-  signed char n;  
-  signed char xs;
   unsigned char frame;
 
-  whole = 80;
-  ball_x = 0;
-  ball_y = 10;
-  ball_y_move = 0;
-  n = -1;
-  xs = -1;
-  anim_state = 0;
   frame = 0;
   setup();                            /* setup our program */
 
@@ -203,190 +186,8 @@ int main(void)
     start_one_vectrex_round();        /* start 'de round */
     Intensity_a(MAX_BRIGHTNESS/2);          /* set some brightness */
 
-    #define YADD 80
-
-    ball_y_move = (ball_y +  YADD);
-    //ball_y_move = YADD; //(ball_y +  YADD);
-    //ball_x = 0;
-
     //cDraw_VLcTri((void*)(triangles), MOVE_SCALE, _SCALE);
-    cDraw_synced_list((void*)(triangles), MOVE_SCALE, _SCALE);
-
-    // DRAW BALL
-    if (0)
-    {
-      // Circumference
-      if (!(Vec_Btn_State & 0b00000001))
-      {
-        cDraw_VLcZ((void*)(ball),ball_y_move, ball_x, MOVE_SCALE, _SCALE);
-      }
-
-      // Longitude
-      if (!(Vec_Btn_State & 0b00000010))
-      {
-        cDraw_VLcZ((void*)(anim[anim_state]),ball_y_move, ball_x, MOVE_SCALE, _SCALE);
-      }
-
-      // Latitude
-      if (!(Vec_Btn_State & 0b00000100))
-      {
-        Intensity_a(MAX_BRIGHTNESS/2);  
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg0);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg1);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg2);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg3);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg4);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg5);
-
-        Reset0Ref();
-        VIA_t1_cnt_lo = MOVE_SCALE;
-        Moveto_d((ball_y_move), ball_x);
-        VIA_t1_cnt_lo = 120;   // Set scale to 120
-        cMov_Draw_VLc_a((void *)latSeg6);
-      }
-    }
-
-    // Grid
-    if (0) //!(Vec_Btn_State & 0b00001000))
-    {
-      Intensity_a(0x34);
-      Reset0Ref();
-      VIA_t1_cnt_lo = MOVE_SCALE;
-      Moveto_d(90, -108);
-      VIA_t1_cnt_lo = 248;  // scale
-      Draw_Line_d(0,127);
-
-#define STEPY -18
-
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,-127);
-
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,127);
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,-127);
-
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,127);
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,-127);
-
-      Moveto_d(STEPY, 0);
-      Draw_Line_d(0,127);
-
-
-#define STEPX  -18
-      Reset0Ref();
-      Moveto_d(-55, 64);
-      VIA_t1_cnt_lo = 248;  // scale
-      Draw_Line_d(108,0);
-      Moveto_d(0, STEPX);
-      Draw_Line_d(-108,0);
-      Moveto_d(0, STEPX);
-      Draw_Line_d(108,0);
-
-      Moveto_d(0, STEPX);
-      Draw_Line_d(-108,0);
-      Moveto_d(0, STEPX);
-      Draw_Line_d(108,0);
-
-      Moveto_d(0, STEPX);
-      Draw_Line_d(-108,0);
-      Moveto_d(0, STEPX);
-      Draw_Line_d(108,0);
-
-      Moveto_d(0, STEPX);
-      Draw_Line_d(-108,0);
-    }
-
-    if ((Vec_Btn_State &7) != 0b00000010)
-    {
-      ball_x = ball_x + xs;
-      ball_y = ball_y + n;
-    }
-
-    if (ball_x>=EDGE+10)
-    { 
-      ball_x = ball_x - xs;
-      xs = -xs;
-      bounce_sound();
-    }
-
-    if (ball_x<=-EDGE+30) 
-    {
-      ball_x = ball_x - xs;
-      xs = -xs;
-      bounce_sound();
-    } 
-
-    if (ball_y>=BOT) ball_y = BOT;
-
-    if (ball_y<=-BOT) 
-    {
-      //ball_y = -BOT;
-      whole = 80;
-      ball_y = ball_y - n;
-      n = -n;
-      bounce_sound();
-    }
-
-    if ((Vec_Btn_State &7) != 0b00000010)
-    {
-      whole = whole - frac;
-      if ( whole < 0 )
-      {
-          whole = whole + 127;
-          n = n - 1;
-          Moveto_d(0, STEPX);
-      }
-    }
-
-    if (frame & 1)
-    {
-        if (xs > 0)
-        {
-          anim_state++;
-        }
-        else
-        {
-           anim_state--;
-        }
-    }
-
-    if (anim_state >= MAX_ANIM)
-        anim_state = 0;
-
-    if (anim_state < 0)
-        anim_state = MAX_ANIM-1;
+    //cDraw_synced_list((void*)(triangles), MOVE_SCALE, MOVE_SCALE);
 
     check_buttons();
 
