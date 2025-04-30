@@ -9,7 +9,7 @@ void cDraw_synced_list(
 	signed int y, 
 	signed int x, 
 	unsigned int scaleMove, 
-	unsigned int scaleList);
+	unsigned int scaleDraw);
 
 void cMov_Draw_VLc_a(signed char *vList);
 

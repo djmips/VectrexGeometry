@@ -76,7 +76,7 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
         print ("const signed char %s[] = {" % arrayName, file=f)
 
         #print the number of triangles in the array
-        print ("%d," % (np.size(x1)), file=f)
+        #print ("%d," % (np.size(x1)), file=f)
 
         for i in range(np.size(x1)):
             #first print the move location of the first vertex of the triangle
@@ -85,19 +85,20 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
             #then calculate the delta to the second vertrex and print that
             dx = x2[i] - x1[i]
             dy = y2[i] - y1[i]
-            print ("255,%d,%d, // Line to second vertex" % (dx, dy), file=f)
+            print ("-1,%d,%d, // Line to second vertex" % (dx, dy), file=f)
 
             #then calculate the delta to the third vertrex and print that
             dx = x3[i] - x2[i]
             dy = y3[i] - y2[i]
-            print ("255,%d,%d, // Line to third vertex" % (dx, dy), file=f)
+            print ("-1,%d,%d, // Line to third vertex" % (dx, dy), file=f)
 
             #then calculate the delta back to the first vertrex and print that
             dx = x1[i] - x3[i]
             dy = y1[i] - y3[i]
-            print ("255,%d,%d, // Line to first vertex" % (dx, dy), file=f)
+            print ("-1,%d,%d, // Line to first vertex" % (dx, dy), file=f)
 
-        print ("};", file=f)
+        # terminate with the literal 2
+        print ("2};", file=f)
 
 # %%
 def plot_lines(name: str, x1: list, x2: list, y1: list, y2: list, ax=None):
@@ -244,9 +245,13 @@ def inward_triangles():
     x3 = np.multiply(np.cos(b), r) + const
     y3 = np.multiply(np.sin(b), r) + const
 
-    print_triangles("triangles.h", "triangles", x1, x2, x3, y1, y2, y3)
+    # pass a file name that's relative to current directory with directory GeometrySource/source
+    print_triangles("GeometrySrc/source/triangles.h", "triangles", x1, x2, x3, y1, y2, y3)
 
-    #plt.show()
+    plot_lines("inward", x1,x2,y1,y2)
+    plot_lines("inward", x2,y3,y2,y3)
+    plot_lines("inward", x3,x1,y3,y1)
+    plt.show()
 
 def circle_int_lines():
     """ A circle with internal connecting lines.

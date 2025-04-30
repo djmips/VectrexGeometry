@@ -5,86 +5,7 @@
 #include "controller.h"
 #include "drawRoutines.h"
 
-const signed char triangles[] = {
-  19,
-  3,0,
-  -5,3,
-  0,-6,
-  5,3,
-  4,0,
-  -6,2,
-  1,-7,
-  5,4,
-  4,1,
-  -8,1,
-  2,-8,
-  5,6,
-  5,2,
-  -9,0,
-  4,-9,
-  5,8,
-  5,3,
-  -11,0,
-  6,-9,
-  5,10,
-  5,5,
-  -13,-2,
-  8,-10,
-  4,12,
-  6,7,
-  -15,-5,
-  12,-10,
-  3,15,
-  5,9,
-  -16,-8,
-  15,-10,
-  0,18,
-  5,11,
-  -18,-12,
-  20,-9,
-  -2,22,
-  4,14,
-  -18,-18,
-  25,-7,
-  -6,25,
-  2,17,
-  -19,-24,
-  30,-4,
-  -11,28,
-  0,20,
-  -18,-31,
-  36,0,
-  -18,31,
-  -3,24,
-  -15,-39,
-  42,6,
-  -26,33,
-  -8,27,
-  -11,-48,
-  47,14,
-  -36,34,
-  -14,30,
-  -5,-58,
-  53,24,
-  -47,34,
-  -21,33,
-  3,-69,
-  58,37,
-  -61,31,
-  -30,35,
-  15,-79,
-  61,53,
-  -76,26,
-  -41,36,
-  31,-90,
-  62,72,
-  -93,18,
-  -54,35,
-  51,-99,
-  60,94,
-  -112,5,
-  };
-
+#include "triangles.h"
 
 /*
  * Some defines, Maximal brightness is $7f, highest not set!
@@ -187,7 +108,7 @@ int main(void)
     Intensity_a(MAX_BRIGHTNESS/2);          /* set some brightness */
 
     //cDraw_VLcTri((void*)(triangles), MOVE_SCALE, _SCALE);
-    //cDraw_synced_list((void*)(triangles), MOVE_SCALE, MOVE_SCALE);
+    cDraw_synced_list((void*)(triangles),0,0, MOVE_SCALE, 0x30);
 
     check_buttons();
 
