@@ -13,7 +13,7 @@
  */
 #define MAX_BRIGHTNESS (0x7f)
 #define MAX_SCALE (0xf0)
-#define MOVE_SCALE 0x90
+#define MOVE_SCALE MAX_SCALE
 
 #define EDGE 92
 #define BOT 100
@@ -108,7 +108,7 @@ int main(void)
     Intensity_a(MAX_BRIGHTNESS/2);          /* set some brightness */
 
     //cDraw_VLcTri((void*)(triangles), MOVE_SCALE, _SCALE);
-    cDraw_synced_list((void*)(triangles),0,0, MOVE_SCALE, 0x30);
+    cDraw_synced_list((void*)(triangles),0,0, MOVE_SCALE, MOVE_SCALE);
 
     check_buttons();
 

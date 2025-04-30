@@ -97,6 +97,9 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
             dy = y1[i] - y3[i]
             print ("-1,%d,%d, // Line to first vertex" % (dx, dy), file=f)
 
+            # sync
+            print ("1,0,0, // Sync", file=f)
+
         # terminate with the literal 2
         print ("2};", file=f)
 
@@ -249,7 +252,7 @@ def inward_triangles():
     print_triangles("GeometrySrc/source/triangles.h", "triangles", x1, x2, x3, y1, y2, y3)
 
     plot_lines("inward", x1,x2,y1,y2)
-    plot_lines("inward", x2,y3,y2,y3)
+    plot_lines("inward", x2,x3,y2,y3)
     plot_lines("inward", x3,x1,y3,y1)
     plt.show()
 
