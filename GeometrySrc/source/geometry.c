@@ -102,13 +102,26 @@ int main(void)
   frame = 0;
   setup();                            /* setup our program */
 
+
+  const long numberOfTriangles = (long)triangles[0];
+  const long sizeofTriangle =  ((long)sizeof(triangles)-1) / numberOfTriangles;
+
+  long offset = sizeofTriangle*(numberOfTriangles-1);
+
   while (1)                        /* never to return... */
   {
     start_one_vectrex_round();        /* start 'de round */
     Intensity_a(MAX_BRIGHTNESS/2);          /* set some brightness */
+  
+    void *triangleStart = ((void*)(triangles+1));
+    triangleStart = triangleStart + offset;
+    cDraw_synced_list(triangleStart,0,0, MOVE_SCALE, MOVE_SCALE);
 
-    //cDraw_VLcTri((void*)(triangles), MOVE_SCALE, _SCALE);
-    cDraw_synced_list((void*)(triangles),0,0, MOVE_SCALE, MOVE_SCALE);
+    offset -= sizeofTriangle;
+    if (offset < 0)
+    {
+      offset = sizeofTriangle*(numberOfTriangles-1);
+    }
 
     check_buttons();
 

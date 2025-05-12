@@ -76,9 +76,10 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
         print ("const signed char %s[] = {" % arrayName, file=f)
 
         #print the number of triangles in the array
-        #print ("%d," % (np.size(x1)), file=f)
+        print ("%d, // Number of triangles" % (np.size(x1)), file=f)
+        print ("", file=f)
 
-        for i in range(np.size(x1)):
+        for i in reversed(range(np.size(x1))):
             #first print the move location of the first vertex of the triangle
             print ("0,%d,%d, // Move" % (x1[i], y1[i]), file=f)
 
@@ -99,6 +100,8 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
 
             # sync
             print ("1,0,0, // Sync", file=f)
+
+            print ("", file=f)
 
         # terminate with the literal 2
         print ("2};", file=f)
