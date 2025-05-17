@@ -264,7 +264,8 @@ def circle_int_lines():
     """
 
     n = 18
-    t = np.arange(0, np.tau - 0.001, np.tau / n)
+    tau = np.pi * 2
+    t = np.arange(0, tau - 0.001, tau / n)
 
     a = np.cos(t) * 200 + 202
     b = np.sin(t) * 200 + 202
