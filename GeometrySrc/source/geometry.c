@@ -5,7 +5,8 @@
 #include "controller.h"
 #include "drawRoutines.h"
 
-#include "triangles.h"
+#include "inward_triangles.h"
+#include "box.h"
 
 /*
  * Some defines, Maximal brightness is $7f, highest not set!

@@ -106,6 +106,62 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
         # terminate with the literal 2
         print ("2};", file=f)
 
+
+def print_quads(file: str, arrayName:str, x1: list, x2: list, x3: list, x4: list, y1: list, y2: list, y3: list, y4: list, ax=None):
+    """ This routine needs to print out a drawList
+
+    Args:
+        file (str): Name of the file
+        arrayName (str): Name of the array
+        x1 (list): x coordinates of point 1
+        x2 (list): x coordinates of point 2
+        x3 (list): x coordinates of point 3
+        y1 (list): y coordinates of point 1
+        y2 (list): y coordinates of point 2
+        y3 (list): y coordinates of point 3
+    """
+
+    with open(file, 'w') as f:
+
+        print ("const signed char %s[] = {" % arrayName, file=f)
+
+        #print the number of triangles in the array
+        print ("%d, // Number of quads" % (np.size(x1)), file=f)
+        print ("", file=f)
+
+        for i in reversed(range(np.size(x1))):
+            #first print the move location of the first vertex of the triangle
+            print ("0,%d,%d, // Move" % (x1[i], y1[i]), file=f)
+
+            #then calculate the delta to the second vertrex and print that
+            dx = x2[i] - x1[i]
+            dy = y2[i] - y1[i]
+            print ("-1,%d,%d, // Line to second vertex" % (dx, dy), file=f)
+
+            #then calculate the delta to the third vertrex and print that
+            dx = x3[i] - x2[i]
+            dy = y3[i] - y2[i]
+            print ("-1,%d,%d, // Line to third vertex" % (dx, dy), file=f)
+
+            #then calculate the delta back to the fourth vertrex and print that
+            dx = x4[i] - x3[i]
+            dy = y4[i] - y3[i]  
+            print ("-1,%d,%d, // Line to fourth vertex" % (dx, dy), file=f)
+
+            #then calculate the delta back to the first vertrex and print that
+            dx = x1[i] - x4[i]
+            dy = y1[i] - y4[i]
+            print ("-1,%d,%d, // Line to first vertex" % (dx, dy), file=f)
+
+            # sync
+            print ("1,0,0, // Sync", file=f)
+
+            print ("", file=f)
+
+        # terminate with the literal 2
+        print ("2};", file=f)
+
+
 # %%
 def plot_lines(name: str, x1: list, x2: list, y1: list, y2: list, ax=None):
     """ Plots lines defined by x and y coordinates.
@@ -146,7 +202,7 @@ def box():
     """ Figure completely made of squares.
     """
 
-    t = np.arange(0, 2 * np.pi, np.pi / 30)
+    t = np.arange(0, 2 * np.pi, np.pi / 20)
     a = t + np.pi / 2
 
     r1 = np.cos(2*t) * 200
@@ -156,6 +212,15 @@ def box():
     r2 = np.cos(2*a) * 200
     x2 = np.multiply(np.cos(a), r2) + 202
     y2 = np.multiply(np.sin(a), r2) + 202
+
+    x3 = np.multiply(np.cos(t), r1) + 202
+    y3 = np.multiply(np.sin(t), r1) + 202
+
+    x4 = np.multiply(np.cos(a), r2) + 202
+    y4 = np.multiply(np.sin(a), r2) + 202
+
+    # pass a file name that's relative to current directory with directory GeometrySource/source
+    print_quads("GeometrySrc/source/box.h", "quads", x1, x2, x3, x4, y1, y2, y3, y4)
 
     plot_lines("Box", x1, x2, y1, y2)
     plt.show()
@@ -252,7 +317,7 @@ def inward_triangles():
     y3 = np.multiply(np.sin(b), r) + const
 
     # pass a file name that's relative to current directory with directory GeometrySource/source
-    print_triangles("GeometrySrc/source/triangles.h", "triangles", x1, x2, x3, y1, y2, y3)
+    print_triangles("GeometrySrc/source/inward_triangles.h", "triangles", x1, x2, x3, y1, y2, y3)
 
     plot_lines("inward", x1,x2,y1,y2)
     plot_lines("inward", x2,x3,y2,y3)
@@ -389,11 +454,11 @@ def parabola():
 # %%
 if __name__ == '__main__':
     #disk()
-    #box()
+    box()
     #outward_triangles()
     #cyclone_spiral()
     #star()
-    inward_triangles()
+    #inward_triangles()
     #circle_int_lines()
     #tunnel()
     #moire_pattern()
