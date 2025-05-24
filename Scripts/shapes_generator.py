@@ -130,11 +130,15 @@ def print_quads(file: str, arrayName:str, x1: list, x2: list, y1: list, y2: list
         print ("", file=f)
 
 
+
         for i in range(len(x1) - 4, -1, -4):  # Start from last quad, go backwards
             # Get 4 edges for this quad
             qx1, qy1 = x1[i:i+4], y1[i:i+4]
             qx2, qy2 = x2[i:i+4], y2[i:i+4]
-            
+
+            #first print the move location of the first vertex of the quad
+            print ("0,%d,%d, // Move to first vertex" % (qx1[0], qy1[0]), file=f)
+
             # Process each edge of the quad
             for j in range(4):
                 edge_x1, edge_y1 = qx1[j], qy1[j]
@@ -142,8 +146,8 @@ def print_quads(file: str, arrayName:str, x1: list, x2: list, y1: list, y2: list
 
                 dx = edge_x2 - edge_x1
                 dy = edge_y2 - edge_y1
-                print ("-1,%d,%d, // Line to %d,%d" % (dx, dy, edge_x2, edge_y2), file=f)                
-
+                print ("-1,%d,%d, // Line to %d,%d" % (dx, dy, edge_x2, edge_y2), file=f)       
+                         
             # sync
             print ("1,0,0, // Sync", file=f)
 
@@ -193,23 +197,26 @@ def box():
     """ Figure completely made of squares.
     """
 
+    scale = 110
+    nboxes = 8
     tau = 2 * np.pi
-    t = np.arange(0, tau, tau / 60)
+    t = np.arange(0, tau, tau / (nboxes*4))
     a = t + tau / 4 # 90 degrees
 
-    r1 = np.cos(2*t) * 200
-    x1 = np.multiply(np.cos(t), r1) + 202
-    y1 = np.multiply(np.sin(t), r1) + 202
+    rconst = 0
+    r1 = np.cos(2*t) * scale
+    x1 = np.multiply(np.cos(t), r1) + rconst
+    y1 = np.multiply(np.sin(t), r1) + rconst
 
-    r2 = np.cos(2*a) * 200
-    x2 = np.multiply(np.cos(a), r2) + 202
-    y2 = np.multiply(np.sin(a), r2) + 202
+    r2 = np.cos(2*a) * scale
+    x2 = np.multiply(np.cos(a), r2) + rconst
+    y2 = np.multiply(np.sin(a), r2) + rconst
 
-    x3 = np.multiply(np.cos(t), r1) + 202
-    y3 = np.multiply(np.sin(t), r1) + 202
+    x3 = np.multiply(np.cos(t), r1) + rconst
+    y3 = np.multiply(np.sin(t), r1) + rconst
 
-    x4 = np.multiply(np.cos(a), r2) + 202
-    y4 = np.multiply(np.sin(a), r2) + 202
+    x4 = np.multiply(np.cos(a), r2) + rconst
+    y4 = np.multiply(np.sin(a), r2) + rconst
 
     # pass a file name that's relative to current directory with directory GeometrySource/source
     print_quads("GeometrySrc/source/box.h", "quads", x1, x2, y1, y2)
@@ -450,7 +457,7 @@ if __name__ == '__main__':
     #outward_triangles()
     #cyclone_spiral()
     #star()
-    inward_triangles()
+    #inward_triangles()
     #circle_int_lines()
     #tunnel()
     #moire_pattern()
