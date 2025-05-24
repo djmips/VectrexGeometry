@@ -212,12 +212,6 @@ def box():
     x2 = np.multiply(np.cos(a), r2) + rconst
     y2 = np.multiply(np.sin(a), r2) + rconst
 
-    x3 = np.multiply(np.cos(t), r1) + rconst
-    y3 = np.multiply(np.sin(t), r1) + rconst
-
-    x4 = np.multiply(np.cos(a), r2) + rconst
-    y4 = np.multiply(np.sin(a), r2) + rconst
-
     # pass a file name that's relative to current directory with directory GeometrySource/source
     print_quads("GeometrySrc/source/box.h", "quads", x1, x2, y1, y2)
 
