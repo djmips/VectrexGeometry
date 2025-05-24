@@ -34,6 +34,7 @@ def print_lines(file: str, arrayName:str, x1: list, x2: list, y1: list, y2: list
 
 
 """
+This is the format for drawing vectors expected by the C code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 U = address of vectorlist
 X = (y,x) position of vectorlist (this will be point 0,0), positioning on screen
@@ -57,6 +58,7 @@ const signed char drawList[] = {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 """
 
+# This function prints out a list of quads in the format expected by the C code
 def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: list, y2: list, y3: list, ax=None):
     """ This routine needs to print out a drawList
 
@@ -106,8 +108,8 @@ def print_triangles(file: str, arrayName:str, x1: list, x2: list, x3: list, y1: 
         # terminate with the literal 2
         print ("2};", file=f)
 
-
-def print_quads(file: str, arrayName:str, x1: list, x2: list, x3: list, x4: list, y1: list, y2: list, y3: list, y4: list, ax=None):
+# This function prints out a list of quads in the format expected by the C code
+def print_quads(file: str, arrayName:str, x1: list, x2: list, y1: list, y2: list, ax=None):
     """ This routine needs to print out a drawList
 
     Args:
@@ -115,10 +117,8 @@ def print_quads(file: str, arrayName:str, x1: list, x2: list, x3: list, x4: list
         arrayName (str): Name of the array
         x1 (list): x coordinates of point 1
         x2 (list): x coordinates of point 2
-        x3 (list): x coordinates of point 3
         y1 (list): y coordinates of point 1
         y2 (list): y coordinates of point 2
-        y3 (list): y coordinates of point 3
     """
 
     with open(file, 'w') as f:
@@ -126,32 +126,23 @@ def print_quads(file: str, arrayName:str, x1: list, x2: list, x3: list, x4: list
         print ("const signed char %s[] = {" % arrayName, file=f)
 
         #print the number of triangles in the array
-        print ("%d, // Number of quads" % (np.size(x1)), file=f)
+        print ("%d, // Number of quads" % (np.size(x1)/4), file=f)
         print ("", file=f)
 
-        for i in reversed(range(np.size(x1))):
-            #first print the move location of the first vertex of the triangle
-            print ("0,%d,%d, // Move" % (x1[i], y1[i]), file=f)
 
-            #then calculate the delta to the second vertrex and print that
-            dx = x2[i] - x1[i]
-            dy = y2[i] - y1[i]
-            print ("-1,%d,%d, // Line to second vertex" % (dx, dy), file=f)
+        for i in range(len(x1) - 4, -1, -4):  # Start from last quad, go backwards
+            # Get 4 edges for this quad
+            qx1, qy1 = x1[i:i+4], y1[i:i+4]
+            qx2, qy2 = x2[i:i+4], y2[i:i+4]
+            
+            # Process each edge of the quad
+            for j in range(4):
+                edge_x1, edge_y1 = qx1[j], qy1[j]
+                edge_x2, edge_y2 = qx2[j], qy2[j]
 
-            #then calculate the delta to the third vertrex and print that
-            dx = x3[i] - x2[i]
-            dy = y3[i] - y2[i]
-            print ("-1,%d,%d, // Line to third vertex" % (dx, dy), file=f)
-
-            #then calculate the delta back to the fourth vertrex and print that
-            dx = x4[i] - x3[i]
-            dy = y4[i] - y3[i]  
-            print ("-1,%d,%d, // Line to fourth vertex" % (dx, dy), file=f)
-
-            #then calculate the delta back to the first vertrex and print that
-            dx = x1[i] - x4[i]
-            dy = y1[i] - y4[i]
-            print ("-1,%d,%d, // Line to first vertex" % (dx, dy), file=f)
+                dx = edge_x2 - edge_x1
+                dy = edge_y2 - edge_y1
+                print ("-1,%d,%d, // Line to %d,%d" % (dx, dy, edge_x2, edge_y2), file=f)                
 
             # sync
             print ("1,0,0, // Sync", file=f)
@@ -202,8 +193,9 @@ def box():
     """ Figure completely made of squares.
     """
 
-    t = np.arange(0, 2 * np.pi, np.pi / 20)
-    a = t + np.pi / 2
+    tau = 2 * np.pi
+    t = np.arange(0, tau, tau / 60)
+    a = t + tau / 4 # 90 degrees
 
     r1 = np.cos(2*t) * 200
     x1 = np.multiply(np.cos(t), r1) + 202
@@ -220,7 +212,7 @@ def box():
     y4 = np.multiply(np.sin(a), r2) + 202
 
     # pass a file name that's relative to current directory with directory GeometrySource/source
-    print_quads("GeometrySrc/source/box.h", "quads", x1, x2, x3, x4, y1, y2, y3, y4)
+    print_quads("GeometrySrc/source/box.h", "quads", x1, x2, y1, y2)
 
     plot_lines("Box", x1, x2, y1, y2)
     plt.show()
@@ -458,7 +450,7 @@ if __name__ == '__main__':
     #outward_triangles()
     #cyclone_spiral()
     #star()
-    #inward_triangles()
+    inward_triangles()
     #circle_int_lines()
     #tunnel()
     #moire_pattern()
